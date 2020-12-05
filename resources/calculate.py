@@ -4,7 +4,7 @@ from models.expense import ExpenseItemModel
 from models.student import StudentModel
 from typing import Dict
 
-class StudentTransaction:
+class StudentBalance:
   student: StudentModel
   starting: float
   balance: float
@@ -33,7 +33,7 @@ class Calculate(Resource):
     total = sum(i.amount for i in items)
     average_amount = total / len(students) if students else 0
 
-    txns = [StudentTransaction(student=s, balance=round(average_amount - s.total_expense_amount, 3)) for s in students]
+    txns = [StudentBalance(student=s, balance=round(average_amount - s.total_expense_amount, 3)) for s in students]
     owes = [t for t in txns if t.balance > 0]
     owes.sort(key=lambda t: t.balance, reverse=True)
 
