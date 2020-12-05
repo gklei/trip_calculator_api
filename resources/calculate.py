@@ -1,8 +1,6 @@
-from flask import jsonify
-from flask_restful import Resource, reqparse
+from flask_restful import Resource
 from models.expense import ExpenseItemModel
 from models.student import StudentModel
-from typing import Dict
 
 class StudentBalance:
   student: StudentModel
@@ -26,6 +24,23 @@ class StudentBalance:
       'starting': self.starting
     }
 
+class StudentTransaction:
+  from_student: StudentModel
+  to_student: StudentModel
+  amount: float
+
+  def __init__(self, from_student: StudentModel, to_student: StudentModel, amount: float):
+    self.from_student = from_student
+    self.to_student = to_student
+    self.amount = amount
+  
+  def json(self):
+    return {
+      'from': self.from_student.json(include_expense_items=False),
+      'to': self.to_student.json(include_expense_items=False),
+      'amount': self.amount
+    }
+
 class Calculate(Resource):
   def get(self):
     items = ExpenseItemModel.query.all()
@@ -42,21 +57,33 @@ class Calculate(Resource):
 
     from_index = 0
     to_index = 0
-    messages = []
+    transactions = []
 
     while from_index < len(owes) and to_index < len(owed):
       from_student = owes[from_index]
       to_student = owed[to_index]
 
       if abs(to_student.balance) >= from_student.balance:
-        messages.append(f'{from_student.name} gives {to_student.name} {-from_student.balance}')
+        transactions.append(
+          StudentTransaction(
+            from_student=from_student.student,
+            to_student=to_student.student,
+            amount=from_student.balance
+          )
+        )
         to_student.balance += from_student.balance
         from_student.balance = 0
         from_index += 1
         if to_student.balance == 0:
           to_index += 1
       else:
-        messages.append(f'{from_student.name} gives {to_student.name} {to_student.balance}')
+        transactions.append(
+          StudentTransaction(
+            from_student=from_student.student,
+            to_student=to_student.student,
+            amount=to_student.balance
+          )
+        )
         from_student.balance += to_student.balance
         to_student.balance = 0
         to_index += 1
@@ -64,5 +91,5 @@ class Calculate(Resource):
     return {
       'total_amount': total,
       'average_amount': average_amount,
-      'txns': messages,
+      'txns': [t.json() for t in transactions],
     }
