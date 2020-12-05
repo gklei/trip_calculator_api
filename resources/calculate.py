@@ -64,6 +64,5 @@ class Calculate(Resource):
     return {
       'total_amount': total,
       'average_amount': average_amount,
-      'students_giving': [s.json() for s in owes],
       'txns': messages,
     }

@@ -19,10 +19,10 @@ class ExpenseItem(Resource):
   def get(self, student_id):
       items = ExpenseItemModel.find_by_student_id(student_id)
       if items is not None:
-          return {
-            'total_amount': sum(i.amount for i in items),
-            'expense_items': [i.json() for i in items]
-          }
+        return {
+          'total_amount': sum(i.amount for i in items),
+          'expense_items': [i.json() for i in items]
+        }
       else:
         return {
           'message': 'Item not found'
@@ -50,16 +50,14 @@ class ExpenseItem(Resource):
         'message': 'An error occured while creating the expense item.'
       }, 500
     
-    return {
-      'item': item.json()
-    }
+    return item.json()
 
 class DeleteExpenseItem(Resource):
   def delete(self, item_id):
     item = ExpenseItemModel.find_by_id(item_id)
     if item:
       item.delete_from_db()
-    
+
     return {'message': 'Item deleted'}
 
 class ExpenseItemList(Resource):
