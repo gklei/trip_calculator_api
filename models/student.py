@@ -26,13 +26,13 @@ class StudentModel(db.Model):
     db.session.commit()
 
   def json(self, include_expense_items: bool=True):
-      return {
-        'id': self.id, 
-        'name': self.name,
-        'total_expense_amount': self.total_expense_amount,
-        **({'expense_items': [i.json() for i in self.expense_items.all()]} if include_expense_items else {})
-      }
-  
+    return {
+      'id': self.id, 
+      'name': self.name,
+      'total_expense_amount': self.total_expense_amount,
+      **({'expense_items': [i.json() for i in self.expense_items.all()]} if include_expense_items else {})
+    }
+
   @classmethod
   def find_by_name(cls, name):
     return cls.query.filter_by(name=name).first()

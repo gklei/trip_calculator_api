@@ -34,9 +34,9 @@ class ExpenseItem(Resource):
     amount = data['amount']
 
     if not StudentModel.find_by_id(student_id):
-        return {
-          'message': f"Student with id {student_id} does not exist"
-        }, 400
+      return {
+        'message': f"Student with id {student_id} does not exist"
+      }, 400
     
     item = ExpenseItemModel(
       name=name,
