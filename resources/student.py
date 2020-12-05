@@ -31,7 +31,9 @@ class DeleteStudent(Resource):
     if student:
       student.delete_from_db()
     
-    return {'message': 'Student deleted'}
+    return {
+      'students': [s.json() for s in StudentModel.query.all()]
+    }
 
 class StudentList(Resource):
   def get(self):
