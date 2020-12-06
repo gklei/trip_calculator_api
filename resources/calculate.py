@@ -81,7 +81,7 @@ class Calculate(Resource):
           StudentTransaction(
             from_student=from_student.student,
             to_student=to_student.student,
-            amount=to_student.balance
+            amount=abs(to_student.balance)
           )
         )
         from_student.balance += to_student.balance
