@@ -14,7 +14,7 @@ The install script is an auxiliary shell script that first tries to remove the c
 
 ## Starting the API
 
-Starting the API is simply done by activating the Python environment and running the `[app.py](http://app.py)` file:
+Starting the API is simply done by activating the Python environment and running the `app.py` file:
 
 ```bash
 source .venv/bin/activate
